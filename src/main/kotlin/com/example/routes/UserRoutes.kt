@@ -9,6 +9,7 @@ import com.example.repository.UserRepository
 import com.example.utils.Constants
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -45,7 +46,7 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) {
         }
 
         try {
-            val user = userRepository.findUserByEmail(loginRequest.email)
+            val user = userRepository.getUser(loginRequest.email)
 
             if (user == null) {
                 call.respond(HttpStatusCode.BadRequest, "User not found")
@@ -63,6 +64,68 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) {
 
         } catch (e: Exception) {
             call.respond(HttpStatusCode.Conflict, e.localizedMessage)
+        }
+    }
+
+    // Get User Route
+    get(Constants.GET_USER) {
+        val emailQueryParam = call.request.queryParameters["email"] ?: return@get call.respond(
+            HttpStatusCode.BadRequest,
+            "Missing user email"
+        )
+
+        try {
+            val user = userRepository.getUser(email = emailQueryParam)
+
+            if (user == null) {
+                call.respond(HttpStatusCode.OK, "User not found")
+            } else {
+                call.respond(HttpStatusCode.OK, user)
+            }
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.Conflict, e.localizedMessage)
+        }
+    }
+
+    authenticate("jwt") {
+        // Update User Route
+        put(Constants.UPDATE_USER) {
+            val email =
+                call.principal<User>()?.email ?: return@put call.respond(HttpStatusCode.BadRequest, "Invalid token")
+
+            val user = try {
+                call.receive<User>()
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest, e.localizedMessage)
+                return@put
+            }
+
+            try {
+                userRepository.updateUser(user = user, email = email)
+
+                val updatedUser = userRepository.getUser(email = email)
+                if (updatedUser == null) {
+                    call.respond(HttpStatusCode.NotFound, "User not found")
+                } else {
+                    call.respond(HttpStatusCode.OK, updatedUser)
+                }
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.Conflict, e.localizedMessage)
+            }
+        }
+
+        // Delete User Route
+        delete(Constants.DELETE_USER) {
+            val email =
+                call.principal<User>()?.email ?: return@delete call.respond(HttpStatusCode.BadRequest, "Invalid token")
+
+            try {
+                userRepository.deleteUser(email = email)
+
+                call.respond(HttpStatusCode.OK, "User deleted")
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.Conflict, e.localizedMessage)
+            }
         }
     }
 

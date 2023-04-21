@@ -6,6 +6,9 @@ object Constants {
     private const val USERS = "$API_VERSION/users"
     const val REGISTER = "$USERS/register"
     const val LOGIN = "$USERS/login"
+    const val GET_USER = USERS
+    const val UPDATE_USER = "$USERS/update"
+    const val DELETE_USER = "$USERS/delete"
 
     private const val NOTES = "$API_VERSION/notes"
     const val CREATE_NOTE = "$NOTES/create"

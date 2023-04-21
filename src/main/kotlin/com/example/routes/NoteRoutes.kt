@@ -23,12 +23,8 @@ fun Route.noteRoutes(noteRepository: NoteRepository = NoteRepository()) {
                 return@post
             }
 
-            val email = try {
-                call.principal<User>()?.email!!
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, e.localizedMessage)
-                return@post
-            }
+            val email =
+                call.principal<User>()?.email ?: return@post call.respond(HttpStatusCode.BadRequest, "Invalid token")
 
             try {
                 noteRepository.createNote(note = noteRequest, email = email)
@@ -39,12 +35,8 @@ fun Route.noteRoutes(noteRepository: NoteRepository = NoteRepository()) {
         }
 
         get(Constants.GET_ALL_NOTES) {
-            val email = try {
-                call.principal<User>()?.email!!
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, e.localizedMessage)
-                return@get
-            }
+            val email =
+                call.principal<User>()?.email ?: return@get call.respond(HttpStatusCode.BadRequest, "Invalid token")
 
             try {
                 val notes = noteRepository.getAllNotes(email = email)
@@ -56,12 +48,10 @@ fun Route.noteRoutes(noteRepository: NoteRepository = NoteRepository()) {
         }
 
         get(Constants.GET_NOTE) {
-            val noteIdQueryParam = try {
-                call.request.queryParameters["id"]?.toInt()!!
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, e.localizedMessage)
-                return@get
-            }
+            val noteIdQueryParam = call.request.queryParameters["id"]?.toInt() ?: return@get call.respond(
+                HttpStatusCode.BadRequest,
+                "Missing ID parameter"
+            )
 
             try {
                 val note = noteRepository.getNote(noteIdQueryParam)
@@ -76,27 +66,23 @@ fun Route.noteRoutes(noteRepository: NoteRepository = NoteRepository()) {
             }
         }
 
-        post(Constants.UPDATE_NOTE) {
-            val noteIdQueryParam = try {
-                call.request.queryParameters["id"]?.toInt()!!
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, e.localizedMessage)
-                return@post
-            }
+        put(Constants.UPDATE_NOTE) {
+            val noteIdQueryParam = call.request.queryParameters["id"]?.toInt() ?: return@put call.respond(
+                HttpStatusCode.BadRequest,
+                "Missing ID parameter"
+            )
 
             val noteRequest = try {
                 call.receive<Note>()
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.BadRequest, e.localizedMessage)
-                return@post
+                return@put
             }
 
-            val email = try {
-                call.principal<User>()?.email!!
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, e.localizedMessage)
-                return@post
-            }
+            val email = call.principal<User>()?.email ?: return@put call.respond(
+                HttpStatusCode.BadRequest,
+                "Invalid token"
+            )
 
             try {
                 noteRepository.updateNote(note = noteRequest, email = email)
@@ -104,7 +90,7 @@ fun Route.noteRoutes(noteRepository: NoteRepository = NoteRepository()) {
                 val updatedNote = noteRepository.getNote(id = noteIdQueryParam)
 
                 if (updatedNote == null) {
-                    call.respond(HttpStatusCode.NotFound, "Note not found")
+                    call.respond(HttpStatusCode.OK, "Note not found")
                 } else {
                     call.respond(HttpStatusCode.OK, updatedNote)
                 }
@@ -114,12 +100,10 @@ fun Route.noteRoutes(noteRepository: NoteRepository = NoteRepository()) {
         }
 
         delete(Constants.DELETE_NOTE) {
-            val noteIdQueryParam = try {
-                call.request.queryParameters["id"]?.toInt()!!
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, e.localizedMessage)
-                return@delete
-            }
+            val noteIdQueryParam = call.request.queryParameters["id"]?.toInt() ?: return@delete call.respond(
+                HttpStatusCode.BadRequest,
+                "Missing ID parameter"
+            )
 
             try {
                 val note = noteRepository.getNote(id = noteIdQueryParam)

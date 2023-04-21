@@ -15,7 +15,7 @@ fun Application.configureSecurity(userRepository: UserRepository = UserRepositor
             validate {
                 val payload = it.payload
                 val email = payload.getClaim("email").asString()
-                val user = userRepository.findUserByEmail(email = email)
+                val user = userRepository.getUser(email = email)
                 user
             }
         }
