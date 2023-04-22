@@ -30,7 +30,7 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) {
 
         try {
             userRepository.createUser(user = userResponse)
-            call.respond(HttpStatusCode.OK, userResponse)
+            call.respond(HttpStatusCode.Created, userResponse)
         } catch (e: Exception) {
             call.respond(HttpStatusCode.Conflict, e.localizedMessage)
         }
@@ -49,7 +49,7 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) {
             val user = userRepository.getUser(loginRequest.email)
 
             if (user == null) {
-                call.respond(HttpStatusCode.BadRequest, "User not found")
+                call.respond(HttpStatusCode.NotFound, "User not found")
             } else {
 
                 if (user.hashPassword == loginRequest.hashPassword.hash()) {
@@ -78,7 +78,7 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) {
             val user = userRepository.getUser(email = emailQueryParam)
 
             if (user == null) {
-                call.respond(HttpStatusCode.OK, "User not found")
+                call.respond(HttpStatusCode.NotFound, "User not found")
             } else {
                 call.respond(HttpStatusCode.OK, user)
             }
@@ -120,9 +120,13 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) {
                 call.principal<User>()?.email ?: return@delete call.respond(HttpStatusCode.BadRequest, "Invalid token")
 
             try {
-                userRepository.deleteUser(email = email)
-
-                call.respond(HttpStatusCode.OK, "User deleted")
+                val user = userRepository.getUser(email = email)
+                if (user == null) {
+                    call.respond(HttpStatusCode.NotFound, "User not found")
+                } else {
+                    userRepository.deleteUser(email = email)
+                    call.respond(HttpStatusCode.Accepted, "User deleted")
+                }
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.Conflict, e.localizedMessage)
             }

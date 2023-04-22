@@ -28,7 +28,7 @@ fun Route.noteRoutes(noteRepository: NoteRepository = NoteRepository()) {
 
             try {
                 noteRepository.createNote(note = noteRequest, email = email)
-                call.respond(HttpStatusCode.OK, noteRequest)
+                call.respond(HttpStatusCode.Created, noteRequest)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.Conflict, e.localizedMessage)
             }
