@@ -4,7 +4,6 @@ import com.example.cache.table.NoteTable
 import com.example.cache.table.UserTable
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import io.ktor.server.application.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.Database
@@ -13,7 +12,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseFactory {
 
-    fun Application.initDatabase() {
+    fun initDatabase() {
         Database.connect(datasource = hikari())
 
         transaction {
