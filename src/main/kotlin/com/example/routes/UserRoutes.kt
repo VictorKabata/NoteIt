@@ -11,7 +11,6 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.request.*
-import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 /**Auth routes for user registration and login*/
@@ -116,7 +115,7 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) = route(
                 if (updatedUser == null) {
                     call.errorResponse(statusCode = HttpStatusCode.NotFound, message = "User not found")
                 } else {
-                    call.successResponse(statusCode = HttpStatusCode.OK, message = updatedUser)
+                    call.successResponse(message = updatedUser)
                 }
             } catch (e: Exception) {
                 call.errorResponse(statusCode = HttpStatusCode.Conflict, message = e.localizedMessage)
