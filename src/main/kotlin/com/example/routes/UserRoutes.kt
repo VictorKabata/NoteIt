@@ -5,6 +5,8 @@ import com.example.authentication.JwtService.hash
 import com.example.models.User
 import com.example.repository.UserRepository
 import com.example.utils.Constants
+import com.example.utils.ResponseHandler.errorResponse
+import com.example.utils.ResponseHandler.successResponse
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -17,20 +19,24 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) {
 
     // Register Route
     post(Constants.REGISTER) {
-        val userResponse = try {
+        val userResponse: User? = try {
             call.receive<User>().apply {
                 this.hashPassword = this.hashPassword.hash()
             }
         } catch (e: Exception) {
-            call.respond(HttpStatusCode.BadRequest, e.localizedMessage)
+            call.errorResponse(statusCode = HttpStatusCode.BadRequest, message = e.localizedMessage)
             return@post
         }
 
         try {
-            userRepository.createUser(user = userResponse)
-            call.respond(HttpStatusCode.Created, userResponse)
+            if (userResponse == null) {
+                call.errorResponse(statusCode = HttpStatusCode.BadRequest, message = "Missing user request body")
+            } else {
+                userRepository.createUser(user = userResponse)
+                call.successResponse(statusCode = HttpStatusCode.Created, data = userResponse)
+            }
         } catch (e: Exception) {
-            call.respond(HttpStatusCode.Conflict, e.localizedMessage)
+            call.errorResponse(statusCode = HttpStatusCode.Conflict, message = e.localizedMessage)
         }
     }
 
