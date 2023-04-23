@@ -6,10 +6,10 @@ import io.ktor.server.application.*
 import io.ktor.server.routing.*
 
 
-fun Route.homeRoutes() {
+fun Route.homeRoutes() = route(Constants.HOME) {
 
-    get(Constants.HOME) {
-        call.successResponse(message = "Hello, World!")
+    get {
+        call.successResponse(message = mapOf("message" to "Hello, World!"))
     }
 
 }
