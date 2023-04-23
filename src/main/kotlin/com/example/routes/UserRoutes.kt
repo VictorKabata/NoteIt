@@ -2,7 +2,6 @@ package com.example.routes
 
 import com.example.authentication.JwtService.generateToken
 import com.example.authentication.JwtService.hash
-import com.example.models.LoginRequest
 import com.example.models.User
 import com.example.repository.UserRepository
 import com.example.utils.Constants
@@ -37,22 +36,25 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) {
 
     // Login Route
     post(Constants.LOGIN) {
-        val loginRequest = try {
-            call.receive<LoginRequest>()
-        } catch (e: Exception) {
-            call.respond(HttpStatusCode.BadRequest, e.localizedMessage)
-            return@post
-        }
+        val emailQueryParam = call.request.queryParameters["email"] ?: return@post call.respond(
+            HttpStatusCode.BadRequest,
+            "Missing user email"
+        )
+
+        val passwordQueryParam = call.request.queryParameters["password"] ?: return@post call.respond(
+            HttpStatusCode.BadRequest,
+            "Missing user password"
+        )
 
         try {
-            val user = userRepository.getUser(loginRequest.email)
+            val user = userRepository.getUser(emailQueryParam)
 
             if (user == null) {
                 call.respond(HttpStatusCode.NotFound, "User not found")
             } else {
 
-                if (user.hashPassword == loginRequest.hashPassword.hash()) {
-                    
+                if (user.hashPassword == passwordQueryParam.hash()) {
+
                     val userToken = mapOf("token" to user.generateToken())
 
                     call.respond(HttpStatusCode.OK, userToken)
