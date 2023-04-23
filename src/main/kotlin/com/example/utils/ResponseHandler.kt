@@ -7,17 +7,22 @@ import io.ktor.server.response.*
 object ResponseHandler {
 
     suspend inline fun <reified T : Any> ApplicationCall.successResponse(
-        statusCode: HttpStatusCode = HttpStatusCode.OK,
-        message: T
+        data: T,
+        statusCode: HttpStatusCode = HttpStatusCode.OK
     ) {
-        respond(status = statusCode, message = message)
+        respond(status = statusCode, message = data)
     }
 
     suspend inline fun ApplicationCall.errorResponse(
-        statusCode: HttpStatusCode = HttpStatusCode.InternalServerError,
-        message: String
+        message: String,
+        statusCode: HttpStatusCode = HttpStatusCode.InternalServerError
     ) {
-        respond(status = statusCode, message = message)
+        val errorBody = mapOf(
+            "code" to statusCode.value,
+            "message" to message
+        )
+
+        respond(status = statusCode, message = errorBody)
     }
 
 }
