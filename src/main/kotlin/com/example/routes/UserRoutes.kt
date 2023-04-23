@@ -4,7 +4,6 @@ import com.example.authentication.JwtService.generateToken
 import com.example.authentication.JwtService.hash
 import com.example.models.LoginRequest
 import com.example.models.User
-import com.example.models.UserToken
 import com.example.repository.UserRepository
 import com.example.utils.Constants
 import io.ktor.http.*
@@ -53,7 +52,8 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) {
             } else {
 
                 if (user.hashPassword == loginRequest.hashPassword.hash()) {
-                    val userToken = UserToken(token = user.generateToken())
+                    
+                    val userToken = mapOf("token" to user.generateToken())
 
                     call.respond(HttpStatusCode.OK, userToken)
                 } else {
