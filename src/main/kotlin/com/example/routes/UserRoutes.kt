@@ -33,7 +33,7 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) {
                 call.errorResponse(statusCode = HttpStatusCode.BadRequest, message = "Missing user request body")
             } else {
                 userRepository.createUser(user = userResponse)
-                call.successResponse(statusCode = HttpStatusCode.Created, data = userResponse)
+                call.successResponse(statusCode = HttpStatusCode.Created, message = userResponse)
             }
         } catch (e: Exception) {
             call.errorResponse(statusCode = HttpStatusCode.Conflict, message = e.localizedMessage)
@@ -42,69 +42,65 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) {
 
     // Login Route
     post(Constants.LOGIN) {
-        val emailQueryParam = call.request.queryParameters["email"] ?: return@post call.respond(
-            HttpStatusCode.BadRequest,
-            "Missing user email"
-        )
+        val emailQueryParam = call.request.queryParameters["email"]
+            ?: return@post call.errorResponse(statusCode = HttpStatusCode.BadRequest, message = "Missing user email")
 
-        val passwordQueryParam = call.request.queryParameters["password"] ?: return@post call.respond(
-            HttpStatusCode.BadRequest,
-            "Missing user password"
-        )
+        val passwordQueryParam = call.request.queryParameters["password"]
+            ?: return@post call.errorResponse(statusCode = HttpStatusCode.BadRequest, message = "Missing user password")
 
         try {
             val user = userRepository.getUser(emailQueryParam)
 
             if (user == null) {
-                call.respond(HttpStatusCode.NotFound, "User not found")
+                call.errorResponse(statusCode = HttpStatusCode.NotFound, message = "User not found")
             } else {
 
                 if (user.hashPassword == passwordQueryParam.hash()) {
 
                     val userToken = mapOf("token" to user.generateToken())
 
-                    call.respond(HttpStatusCode.OK, userToken)
+                    call.successResponse(message = userToken)
                 } else {
-                    call.respond(HttpStatusCode.BadRequest, "Invalid password")
+                    call.errorResponse(statusCode = HttpStatusCode.BadRequest, message = "Invalid password")
                 }
 
             }
 
         } catch (e: Exception) {
-            call.respond(HttpStatusCode.Conflict, e.localizedMessage)
+            call.errorResponse(statusCode = HttpStatusCode.Conflict, message = e.localizedMessage)
         }
     }
 
     // Get User Route
     get(Constants.GET_USER) {
-        val emailQueryParam = call.request.queryParameters["email"] ?: return@get call.respond(
-            HttpStatusCode.BadRequest,
-            "Missing user email"
-        )
+        val emailQueryParam = call.request.queryParameters["email"]
+            ?: return@get call.errorResponse(statusCode = HttpStatusCode.BadRequest, message = "Missing user email")
 
         try {
             val user = userRepository.getUser(email = emailQueryParam)
 
             if (user == null) {
-                call.respond(HttpStatusCode.NotFound, "User not found")
+                call.errorResponse(statusCode = HttpStatusCode.NotFound, message = "User not found")
             } else {
-                call.respond(HttpStatusCode.OK, user)
+                call.successResponse(message = user)
             }
         } catch (e: Exception) {
-            call.respond(HttpStatusCode.Conflict, e.localizedMessage)
+            call.errorResponse(statusCode = HttpStatusCode.Conflict, message = e.localizedMessage)
         }
     }
 
     authenticate("jwt") {
         // Update User Route
         put(Constants.UPDATE_USER) {
-            val email =
-                call.principal<User>()?.email ?: return@put call.respond(HttpStatusCode.BadRequest, "Invalid token")
+            val email = call.principal<User>()?.email ?: return@put call.errorResponse(
+                statusCode = HttpStatusCode.BadRequest,
+                message = "Invalid token"
+            )
 
             val user = try {
                 call.receive<User>()
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, e.localizedMessage)
+                call.errorResponse(statusCode = HttpStatusCode.BadRequest, message = e.localizedMessage)
                 return@put
             }
 
@@ -113,30 +109,33 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) {
 
                 val updatedUser = userRepository.getUser(email = email)
                 if (updatedUser == null) {
-                    call.respond(HttpStatusCode.NotFound, "User not found")
+                    call.errorResponse(statusCode = HttpStatusCode.NotFound, message = "User not found")
                 } else {
-                    call.respond(HttpStatusCode.OK, updatedUser)
+                    call.successResponse(statusCode = HttpStatusCode.OK, message = updatedUser)
                 }
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.Conflict, e.localizedMessage)
+                call.errorResponse(statusCode = HttpStatusCode.Conflict, message = e.localizedMessage)
             }
         }
 
         // Delete User Route
         delete(Constants.DELETE_USER) {
-            val email =
-                call.principal<User>()?.email ?: return@delete call.respond(HttpStatusCode.BadRequest, "Invalid token")
+            val email = call.principal<User>()?.email
+                ?: return@delete call.errorResponse(statusCode = HttpStatusCode.BadRequest, message = "Invalid token")
 
             try {
                 val user = userRepository.getUser(email = email)
                 if (user == null) {
-                    call.respond(HttpStatusCode.NotFound, "User not found")
+                    call.errorResponse(statusCode = HttpStatusCode.NotFound, message = "User not found")
                 } else {
                     userRepository.deleteUser(email = email)
-                    call.respond(HttpStatusCode.Accepted, "User deleted")
+                    call.successResponse(
+                        statusCode = HttpStatusCode.Accepted,
+                        message = mapOf("message" to "User successfully deleted")
+                    )
                 }
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.Conflict, e.localizedMessage)
+                call.errorResponse(statusCode = HttpStatusCode.Conflict, message = e.localizedMessage)
             }
         }
     }

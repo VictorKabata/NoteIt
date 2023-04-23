@@ -7,10 +7,10 @@ import io.ktor.server.response.*
 object ResponseHandler {
 
     suspend inline fun <reified T : Any> ApplicationCall.successResponse(
-        data: T,
+        message: T,
         statusCode: HttpStatusCode = HttpStatusCode.OK
     ) {
-        respond(status = statusCode, message = data)
+        respond(status = statusCode, message = message)
     }
 
     suspend inline fun ApplicationCall.errorResponse(
