@@ -3,14 +3,17 @@ package com.example.authentication
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.example.models.User
+import com.typesafe.config.ConfigFactory
 import io.ktor.util.*
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
 object JwtService {
 
-    private const val issuer = "noteServer"
-    private val jwtSecret = System.getenv("JWT_SECRET") ?: "mementomori"
+    private val envConfig = ConfigFactory.load()
+
+    private val issuer = envConfig.getString("jwt.issuer")
+    private val jwtSecret = envConfig.getString("jwt.secret")
     private val algorithm = Algorithm.HMAC512(jwtSecret)
 
     val verifier = JWT.require(algorithm).withIssuer(issuer).build()
@@ -25,12 +28,14 @@ object JwtService {
             .sign(algorithm)
     }
 
-    private val hashKey = System.getenv("HASH_KEY")?.toByteArray() ?: "mementomori".toByteArray()
-    private val hmacKey = SecretKeySpec(hashKey, "HmacSHA1")
+    private val hashKey = envConfig.getString("security.hashKey").toByteArray()
+
+    private val hashAlgorithm = envConfig.getString("security.hashAlgorithm")
+    private val hmacKey = SecretKeySpec(hashKey, hashAlgorithm)
 
     /**Hash password string*/
     fun String.hash(): String {
-        val hmac = Mac.getInstance("HmacSHA1")
+        val hmac = Mac.getInstance(hashAlgorithm)
         hmac.init(hmacKey)
 
         return hex(hmac.doFinal(this.toByteArray(Charsets.UTF_8)))
