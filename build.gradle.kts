@@ -36,6 +36,8 @@ dependencies {
 
     // implementation(libs.logback)
 
+    implementation(libs.config4k)
+
     implementation(libs.kotlinx.datetime)
 
     testImplementation(libs.ktor.server.test)

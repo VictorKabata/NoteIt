@@ -2,6 +2,7 @@ package com.example.cache
 
 import com.example.cache.table.NoteTable
 import com.example.cache.table.UserTable
+import com.typesafe.config.ConfigFactory
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.Dispatchers
@@ -21,17 +22,20 @@ object DatabaseFactory {
     }
 
     private fun hikari(): HikariDataSource {
-        // ToDo: Remove env variable values
-        val config = HikariConfig().apply {
-            driverClassName = System.getenv("JDBC_DRIVER") ?: "org.postgresql.Driver"
-            jdbcUrl = System.getenv("JDBC_DATABASE_URL") ?: "jdbc:postgresql:notes_db?user=postgres&password=password"
+        val envConfig = ConfigFactory.load()
+
+        val databaseConfig = HikariConfig().apply {
+            driverClassName = envConfig.getString("database.driver")
+            jdbcUrl = envConfig.getString("database.jdbcUrl")
+            username = envConfig.getString("database.username")
+            password = envConfig.getString("database.password")
             maximumPoolSize = 3
             isAutoCommit = false
             transactionIsolation = "TRANSACTION_REPEATABLE_READ"
             validate()
         }
 
-        return HikariDataSource(config)
+        return HikariDataSource(databaseConfig)
 
     }
 
