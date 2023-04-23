@@ -3,12 +3,11 @@ package com.example.utils
 object Constants {
     private const val API_VERSION = "/v1"
     const val HOME = "$API_VERSION/"
-    private const val USERS = "$API_VERSION/users"
-    const val REGISTER = "$USERS/register"
-    const val LOGIN = "$USERS/login"
-    const val GET_USER = USERS
-    const val UPDATE_USER = "$USERS/update"
-    const val DELETE_USER = "$USERS/delete"
+    const val USERS = "$API_VERSION/users"
+    const val REGISTER = "register"
+    const val LOGIN = "login"
+    const val UPDATE_USER = "update"
+    const val DELETE_USER = "delete"
 
     private const val NOTES = "$API_VERSION/notes"
     const val CREATE_NOTE = "$NOTES/create"

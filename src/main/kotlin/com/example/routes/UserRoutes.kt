@@ -15,7 +15,24 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 /**Auth routes for user registration and login*/
-fun Route.authRoutes(userRepository: UserRepository = UserRepository()) {
+fun Route.authRoutes(userRepository: UserRepository = UserRepository()) = route(Constants.USERS) {
+    // Get User Route
+    get {
+        val emailQueryParam = call.request.queryParameters["email"]
+            ?: return@get call.errorResponse(statusCode = HttpStatusCode.BadRequest, message = "Missing user email")
+
+        try {
+            val user = userRepository.getUser(email = emailQueryParam)
+
+            if (user == null) {
+                call.errorResponse(statusCode = HttpStatusCode.NotFound, message = "User not found")
+            } else {
+                call.successResponse(message = user)
+            }
+        } catch (e: Exception) {
+            call.errorResponse(statusCode = HttpStatusCode.Conflict, message = e.localizedMessage)
+        }
+    }
 
     // Register Route
     post(Constants.REGISTER) {
@@ -43,10 +60,16 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) {
     // Login Route
     post(Constants.LOGIN) {
         val emailQueryParam = call.request.queryParameters["email"]
-            ?: return@post call.errorResponse(statusCode = HttpStatusCode.BadRequest, message = "Missing user email")
+            ?: return@post call.errorResponse(
+                statusCode = HttpStatusCode.BadRequest,
+                message = "Missing user email"
+            )
 
         val passwordQueryParam = call.request.queryParameters["password"]
-            ?: return@post call.errorResponse(statusCode = HttpStatusCode.BadRequest, message = "Missing user password")
+            ?: return@post call.errorResponse(
+                statusCode = HttpStatusCode.BadRequest,
+                message = "Missing user password"
+            )
 
         try {
             val user = userRepository.getUser(emailQueryParam)
@@ -66,24 +89,6 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) {
 
             }
 
-        } catch (e: Exception) {
-            call.errorResponse(statusCode = HttpStatusCode.Conflict, message = e.localizedMessage)
-        }
-    }
-
-    // Get User Route
-    get(Constants.GET_USER) {
-        val emailQueryParam = call.request.queryParameters["email"]
-            ?: return@get call.errorResponse(statusCode = HttpStatusCode.BadRequest, message = "Missing user email")
-
-        try {
-            val user = userRepository.getUser(email = emailQueryParam)
-
-            if (user == null) {
-                call.errorResponse(statusCode = HttpStatusCode.NotFound, message = "User not found")
-            } else {
-                call.successResponse(message = user)
-            }
         } catch (e: Exception) {
             call.errorResponse(statusCode = HttpStatusCode.Conflict, message = e.localizedMessage)
         }
@@ -121,7 +126,10 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) {
         // Delete User Route
         delete(Constants.DELETE_USER) {
             val email = call.principal<User>()?.email
-                ?: return@delete call.errorResponse(statusCode = HttpStatusCode.BadRequest, message = "Invalid token")
+                ?: return@delete call.errorResponse(
+                    statusCode = HttpStatusCode.BadRequest,
+                    message = "Invalid token"
+                )
 
             try {
                 val user = userRepository.getUser(email = email)
@@ -139,5 +147,4 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) {
             }
         }
     }
-
 }
