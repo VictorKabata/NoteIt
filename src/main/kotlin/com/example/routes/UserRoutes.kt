@@ -35,7 +35,7 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) = route(
 
     // Register Route
     post(Constants.REGISTER) {
-        val userResponse: User? = try {
+        val userRequestBody: User? = try {
             call.receive<User>().apply {
                 this.hashPassword = this.hashPassword.hash()
             }
@@ -45,11 +45,13 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) = route(
         }
 
         try {
-            if (userResponse == null) {
+            if (userRequestBody == null) {
                 call.errorResponse(statusCode = HttpStatusCode.BadRequest, message = "Missing user request body")
             } else {
-                userRepository.createUser(user = userResponse)
-                call.successResponse(statusCode = HttpStatusCode.Created, message = userResponse)
+
+
+                userRepository.createUser(user = userRequestBody)
+                call.successResponse(statusCode = HttpStatusCode.Created, message = userRequestBody)
             }
         } catch (e: Exception) {
             call.errorResponse(statusCode = HttpStatusCode.Conflict, message = e.localizedMessage)
