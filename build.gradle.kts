@@ -27,6 +27,7 @@ dependencies {
     implementation(libs.ktor.server.sessions)
     implementation(libs.ktor.server.logging)
     implementation(libs.ktor.server.netty)
+    implementation(libs.ktor.server.requestValidation)
 
     implementation(libs.exposed.core)
     implementation(libs.exposed.dao)
