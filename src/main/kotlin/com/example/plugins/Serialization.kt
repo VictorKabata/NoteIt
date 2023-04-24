@@ -9,6 +9,9 @@ import io.ktor.server.routing.*
 fun Application.configureSerialization() {
     install(ContentNegotiation) {
         gson {
+            setPrettyPrinting()
+            serializeNulls()
+            excludeFieldsWithoutExposeAnnotation()
         }
     }
 }
