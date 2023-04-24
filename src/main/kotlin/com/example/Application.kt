@@ -1,6 +1,7 @@
 package com.example
 
 import com.example.cache.DatabaseFactory.initDatabase
+import com.example.plugins.configureContentValidation
 import com.example.plugins.configureRouting
 import com.example.plugins.configureSecurity
 import com.example.plugins.configureSerialization
@@ -16,6 +17,6 @@ fun Application.module() {
 
     configureSecurity()
     configureSerialization()
-    // configureMonitoring()
+    configureContentValidation()
     configureRouting()
 }
