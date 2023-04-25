@@ -1,7 +1,7 @@
 package com.example.cache
 
-import com.example.cache.table.NoteTable
-import com.example.cache.table.UserTable
+import com.example.cache.tables.NoteTable
+import com.example.cache.tables.UserTable
 import com.typesafe.config.ConfigFactory
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource

@@ -1,7 +1,7 @@
 package com.example.repository
 
 import com.example.cache.DatabaseFactory.dbQuery
-import com.example.cache.table.UserTable
+import com.example.cache.tables.UserTable
 import com.example.mappers.toUserDomain
 import com.example.models.User
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq

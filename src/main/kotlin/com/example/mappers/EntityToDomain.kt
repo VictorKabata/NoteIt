@@ -1,7 +1,7 @@
 package com.example.mappers
 
-import com.example.cache.table.NoteTable
-import com.example.cache.table.UserTable
+import com.example.cache.tables.NoteTable
+import com.example.cache.tables.UserTable
 import com.example.models.Note
 import com.example.models.User
 import org.jetbrains.exposed.sql.ResultRow

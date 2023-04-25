@@ -1,4 +1,4 @@
-package com.example.cache.table
+package com.example.cache.tables
 
 import org.jetbrains.exposed.sql.Table
 

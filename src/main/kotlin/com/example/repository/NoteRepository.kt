@@ -1,7 +1,7 @@
 package com.example.repository
 
 import com.example.cache.DatabaseFactory.dbQuery
-import com.example.cache.table.NoteTable
+import com.example.cache.tables.NoteTable
 import com.example.mappers.toNoteDomain
 import com.example.models.Note
 import kotlinx.datetime.Clock
