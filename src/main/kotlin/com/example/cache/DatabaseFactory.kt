@@ -13,14 +13,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseFactory {
 
-    fun initDatabase() {
-        Database.connect(datasource = hikari())
-
-        transaction {
-            SchemaUtils.create(UserTable, NoteTable)
-        }
-    }
-
     private fun hikari(): HikariDataSource {
         val envConfig = ConfigFactory.load()
 
@@ -36,7 +28,14 @@ object DatabaseFactory {
         }
 
         return HikariDataSource(databaseConfig)
+    }
 
+    fun initDatabase() {
+        Database.connect(datasource = hikari())
+
+        transaction {
+            SchemaUtils.create(UserTable, NoteTable)
+        }
     }
 
     suspend fun <T> dbQuery(block: () -> T): T = withContext(Dispatchers.IO) {
