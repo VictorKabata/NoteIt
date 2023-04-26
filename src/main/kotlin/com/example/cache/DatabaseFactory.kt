@@ -17,7 +17,6 @@ object DatabaseFactory {
         val envConfig = ConfigFactory.load()
 
         val databaseConfig = HikariConfig().apply {
-            driverClassName = envConfig.getString("database.driver")
             jdbcUrl = envConfig.getString("database.jdbcUrl")
             username = envConfig.getString("database.username")
             password = envConfig.getString("database.password")
