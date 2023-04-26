@@ -44,3 +44,20 @@ dependencies {
     testImplementation(libs.ktor.server.test)
     testImplementation(libs.kotlin.test.junit)
 }
+
+ktor {
+    docker {
+        jreVersion.set(io.ktor.plugin.features.JreVersion.JRE_17)
+        localImageName.set("noteit-docker-image")
+
+        portMappings.set(
+            listOf(
+                io.ktor.plugin.features.DockerPortMapping(
+                    80,
+                    8080,
+                    io.ktor.plugin.features.DockerPortMappingProtocol.TCP
+                )
+            )
+        )
+    }
+}
