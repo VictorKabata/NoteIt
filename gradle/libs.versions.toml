@@ -6,6 +6,7 @@ exposed = "0.41.1"
 hikari = "4.0.3"
 postgres = "42.2.18"
 config4k = "0.5.0"
+prometheus = "1.10.6"
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
@@ -22,6 +23,9 @@ ktor-server-sessions = { module = "io.ktor:ktor-server-sessions-jvm", version.re
 ktor-server-logging = { module = "io.ktor:ktor-server-call-logging-jvm", version.ref = "ktor" }
 ktor-server-netty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktor" }
 ktor-server-requestValidation = { module = "io.ktor:ktor-server-request-validation", version.ref = "ktor" }
+ktor-server-monitoring = { module = "io.ktor:ktor-server-metrics-micrometer", version.ref = "ktor" }
+
+prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "prometheus" }
 
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "ktor" }
 

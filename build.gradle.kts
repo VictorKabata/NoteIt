@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.libs
+
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktor.plugin)
@@ -28,6 +30,8 @@ dependencies {
     implementation(libs.ktor.server.logging)
     implementation(libs.ktor.server.netty)
     implementation(libs.ktor.server.requestValidation)
+    implementation(libs.ktor.server.monitoring)
+    implementation(libs.prometheus)
 
     implementation(libs.exposed.core)
     implementation(libs.exposed.dao)
@@ -40,6 +44,7 @@ dependencies {
     implementation(libs.config4k)
 
     implementation(libs.kotlinx.datetime)
+    implementation("io.ktor:ktor-server-metrics-micrometer-jvm:2.2.4")
 
     testImplementation(libs.ktor.server.test)
     testImplementation(libs.kotlin.test.junit)
