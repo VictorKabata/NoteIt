@@ -38,3 +38,4 @@ out/
 ### Configuration Files
 *.conf
 tmp
+monitoring/grafana/grafana.db
