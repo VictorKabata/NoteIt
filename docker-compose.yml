@@ -1,29 +1,63 @@
 services:
+
+  # Postgres Database
+  database:
+    image: postgres
+    container_name: noteit_db
+    restart: always
+    volumes:
+      - database:/var/lib/postgresql/data
+    environment:
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5436
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: notes_db
+    ports:
+      - "5432:5436"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+
   web:
     build: .
     container_name: noteit_service
+    restart: always
     ports:
       - "8081:8081"
     depends_on:
       database:
         condition: service_healthy
 
-  database:
-    image: postgres
-    container_name: noteit_db
+  # Prometheus container to query backend metrics
+  prometheus:
+    image: prom/prometheus
+    container_name: noteit_prometheus
     restart: always
-    volumes:
-      - ./data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_HOST: localhost
-      POSTGRES_PORT: 3306
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: noteit_db
     ports:
-      - "3306:3306"
-    expose:
-      - "3306"
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 1s
+      - "3570:9090"
+    volumes:
+      - ./monitoring:/etc/prometheus/
+    links:
+      - web
+    depends_on:
+      database:
+        condition: service_healthy
+
+  # Grafana container to visualize data
+  grafana:
+    image: grafana/grafana:5.1.0
+    container_name: noteit_grafana
+    ports:
+      - "3000:3000"
+    user: "104"
+    volumes:
+      - ./monitoring/grafana:/var/lib/grafana
+    links:
+      - web
+      - prometheus
+    depends_on:
+      database:
+        condition: service_healthy
