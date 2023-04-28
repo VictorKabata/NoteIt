@@ -1,8 +1,6 @@
 name: Build
 
 on:
-    push:
-        branches: [ setup ]
     pull_request:
         branches: [ develop ]
 
@@ -11,28 +9,28 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - name: Checkout code
-              uses: actions/checkout@v2
+            -   name: Checkout code
+                uses: actions/checkout@v2
 
-            - name: Setup JDK
-              uses: actions/setup-java@v2
-              with:
-                  java-version: '11'
+            -   name: Setup JDK
+                uses: actions/setup-java@v2
+                with:
+                    java-version: '11'
 
-            - name: Build with Gradle
-              run: ./gradlew build --no-daemon
+            -   name: 🔨 Build with Gradle
+                run: ./gradlew build --no-daemon
 
-            - name: Lint Check
-              uses: edowson/ktlint-action@v1.3.0
-              with:
-                  lint-flags: --color --reporter=plain
+            -   name: 👓 Lint Check
+                uses: edowson/ktlint-action@v1.3.0
+                with:
+                    lint-flags: --color --reporter=plain
 
-            - name: Unit Tests
-              run: ./gradlew test --no-daemon
+            -   name: 🧪 Unit Tests
+                run: ./gradlew test --no-daemon
 
-            - name: Docker Build
-              uses: docker/build-push-action@v2
-              with:
-                  context: .
-                  push: false
-                  tags: noteit-web:latest
+            -   name: 💿 Docker Build
+                uses: docker/build-push-action@v2
+                with:
+                    context: .
+                    push: false
+                    tags: noteit-web:latest
