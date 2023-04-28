@@ -53,16 +53,6 @@ dependencies {
 ktor {
     docker {
         jreVersion.set(io.ktor.plugin.features.JreVersion.JRE_17)
-        localImageName.set("noteit-docker-image")
-
-        portMappings.set(
-            listOf(
-                io.ktor.plugin.features.DockerPortMapping(
-                    80,
-                    8080,
-                    io.ktor.plugin.features.DockerPortMappingProtocol.TCP
-                )
-            )
-        )
+        localImageName.set("app")
     }
 }
