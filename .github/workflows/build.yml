@@ -21,9 +21,7 @@ jobs:
                 run: ./gradlew build --no-daemon
 
             -   name: 👓 Lint Check
-                uses: edowson/ktlint-action@v1.3.0
-                with:
-                    lint-flags: --color --reporter=plain
+                run: ./gradlew ktLintCheck --no-daemon
 
             -   name: 🧪 Unit Tests
                 run: ./gradlew test --no-daemon
