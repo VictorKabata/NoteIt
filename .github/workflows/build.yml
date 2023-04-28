@@ -18,19 +18,19 @@ jobs:
                     distribution: 'adopt'
                     java-version: '11'
 
-            -   name: Make gradle executable
+            -   name: Make Gradle Executable
                 run: chmod +x ./gradlew
 
-            -   name: 🔨 Build with Gradle
+            -   name: Build with Gradle
                 run: ./gradlew build --no-daemon
 
-            -   name: 👓 Lint Check
+            -   name: Lint Check
                 run: ./gradlew ktLintCheck --no-daemon
 
-            -   name: 🧪 Unit Tests
+            -   name: Unit Tests
                 run: ./gradlew test --no-daemon
 
-            -   name: 💿 Docker Build
+            -   name: Docker Build
                 uses: docker/build-push-action@v2
                 with:
                     context: .
