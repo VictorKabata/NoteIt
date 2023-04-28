@@ -18,7 +18,7 @@ fun ResultRow?.toUserDomain(): User? {
 fun ResultRow?.toNoteDomain(): Note? {
     return if (this == null) null
     else Note(
-        id = this[NoteTable.id],
+        id = this[NoteTable.id].toString(),
         title = this[NoteTable.title],
         description = this[NoteTable.description],
         createdAt = this[NoteTable.createdAt],

@@ -34,8 +34,9 @@ fun Route.noteRoutes(noteRepository: NoteRepository = NoteRepository()) = route(
                 if (noteRequest == null) {
                     call.errorResponse(statusCode = HttpStatusCode.BadRequest, message = "Missing note request body")
                 } else {
-                    noteRepository.createNote(note = noteRequest, email = email)
-                    call.successResponse(statusCode = HttpStatusCode.Created, message = noteRequest)
+                    noteRepository.createNote(note = noteRequest, email = email)?.let {
+                        call.successResponse(statusCode = HttpStatusCode.Created, message = it)
+                    }
                 }
             } catch (e: Exception) {
                 call.errorResponse(statusCode = HttpStatusCode.Conflict, message = e.localizedMessage)
@@ -58,7 +59,7 @@ fun Route.noteRoutes(noteRepository: NoteRepository = NoteRepository()) = route(
         }
 
         get(Constants.GET_NOTE) {
-            val noteIdQueryParam = call.request.queryParameters["id"]?.toInt() ?: return@get call.errorResponse(
+            val noteIdQueryParam = call.request.queryParameters["id"] ?: return@get call.errorResponse(
                 statusCode = HttpStatusCode.BadRequest,
                 message = "Missing ID parameter"
             )
@@ -77,7 +78,7 @@ fun Route.noteRoutes(noteRepository: NoteRepository = NoteRepository()) = route(
         }
 
         put(Constants.UPDATE_NOTE) {
-            val noteIdQueryParam = call.request.queryParameters["id"]?.toInt() ?: return@put call.errorResponse(
+            val noteIdQueryParam = call.request.queryParameters["id"] ?: return@put call.errorResponse(
                 statusCode = HttpStatusCode.BadRequest,
                 message = "Missing ID parameter"
             )
@@ -114,7 +115,7 @@ fun Route.noteRoutes(noteRepository: NoteRepository = NoteRepository()) = route(
         }
 
         delete(Constants.DELETE_NOTE) {
-            val noteIdQueryParam = call.request.queryParameters["id"]?.toInt() ?: return@delete call.errorResponse(
+            val noteIdQueryParam = call.request.queryParameters["id"] ?: return@delete call.errorResponse(
                 statusCode = HttpStatusCode.BadRequest,
                 message = "Missing ID parameter"
             )
