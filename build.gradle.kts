@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktor.plugin)
     alias(libs.plugins.kotlinx.serialization.plugin)
+    alias(libs.plugins.ktLint)
 }
 
 group = "com.example"
@@ -56,3 +57,23 @@ ktor {
         localImageName.set("app")
     }
 }
+
+ktlint {
+    debug.set(true)
+    verbose.set(true)
+    android.set(false)
+    outputToConsole.set(true)
+    outputColorName.set("RED")
+    filter {
+        enableExperimentalRules.set(true)
+        exclude { projectDir.toURI().relativize(it.file.toURI()).path.contains("/generated/") }
+        include("**/kotlin/**")
+    }
+}
+
+
+// org.jlleitschuh.gradle.ktlint.KtLintCheckTask
+
+//tasks.withType<org.ji>{
+//
+//}
