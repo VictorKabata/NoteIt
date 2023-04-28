@@ -26,12 +26,16 @@ class NoteRepository {
     }?.singleOrNull()
 
     /**Get all notes for a specific user*/
-    suspend fun getAllNotes(email: String): List<Note> = dbQuery {
+    suspend fun getAllNotes(
+        email: String,
+        pageNumber: Int,
+        pageSize: Int
+    ): List<Note> = dbQuery {
+        val offset = (pageNumber - 1) * pageSize
+
         NoteTable.select {
             NoteTable.userEmail.eq(email)
-        }.mapNotNull {
-            it.toNoteDomain()
-        }
+        }.limit(n = pageSize, offset = offset.toLong()).mapNotNull { it.toNoteDomain() }
     }
 
     /**Get single note based on note id*/

@@ -49,9 +49,23 @@ fun Route.noteRoutes(noteRepository: NoteRepository = NoteRepository()) = route(
                 message = "Invalid token"
             )
 
+            val pageNumberQueryParam = call.request.queryParameters["page"]?.toInt() ?: 1
+            val pageSizeQueryParam = call.request.queryParameters["size"]?.toInt() ?: 10
+
             try {
-                val notes = noteRepository.getAllNotes(email = email)
-                call.successResponse(message = notes)
+                val notes = noteRepository.getAllNotes(
+                    email = email,
+                    pageSize = pageSizeQueryParam,
+                    pageNumber = pageNumberQueryParam
+                )
+
+                val pagedResponse = mapOf(
+                    "page" to pageNumberQueryParam,
+                    "size" to pageSizeQueryParam,
+                    "data" to notes
+                )
+
+                call.successResponse(message = pagedResponse)
 
             } catch (e: Exception) {
                 call.errorResponse(statusCode = HttpStatusCode.Conflict, message = e.localizedMessage)
