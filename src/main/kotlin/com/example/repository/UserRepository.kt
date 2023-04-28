@@ -13,15 +13,15 @@ import org.jetbrains.exposed.sql.update
 class UserRepository {
 
     /**Create a new user*/
-    suspend fun createUser(user: User) {
-        dbQuery {
-            UserTable.insert { userTable ->
-                userTable[email] = user.email
-                userTable[userName] = user.userName
-                userTable[hashPassword] = user.hashPassword
-            }
+    suspend fun createUser(user: User) = dbQuery {
+        UserTable.insert { userTable ->
+            userTable[email] = user.email
+            userTable[userName] = user.userName
+            userTable[hashPassword] = user.hashPassword
         }
-    }
+    }.resultedValues?.mapNotNull {
+        it.toUserDomain()
+    }?.singleOrNull()
 
     /**Get user*/
     suspend fun getUser(email: String): User? = dbQuery {

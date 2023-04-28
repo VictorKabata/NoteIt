@@ -15,6 +15,7 @@ import io.ktor.server.routing.*
 
 /**Auth routes for user registration and login*/
 fun Route.authRoutes(userRepository: UserRepository = UserRepository()) = route(Constants.USERS) {
+
     // Get User Route
     get {
         val emailQueryParam = call.request.queryParameters["email"]
@@ -48,10 +49,9 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) = route(
             if (userRequestBody == null) {
                 call.errorResponse(statusCode = HttpStatusCode.BadRequest, message = "Missing user request body")
             } else {
-
-
-                userRepository.createUser(user = userRequestBody)
-                call.successResponse(statusCode = HttpStatusCode.Created, message = userRequestBody)
+                userRepository.createUser(user = userRequestBody)?.let {
+                    call.successResponse(statusCode = HttpStatusCode.Created, message = it)
+                }
             }
         } catch (e: Exception) {
             call.errorResponse(statusCode = HttpStatusCode.Conflict, message = e.localizedMessage)
