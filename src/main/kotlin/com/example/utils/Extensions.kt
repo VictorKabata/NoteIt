@@ -1,6 +1,6 @@
 package com.example.utils
 
-import java.util.*
+import java.util.UUID
 
 /**Convert string to UUID
  * @return [UUID]*/

@@ -8,8 +8,12 @@ import com.example.utils.toUUID
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.update
 
 class NoteRepository {
 
@@ -66,5 +70,4 @@ class NoteRepository {
     suspend fun deleteNote(id: String) {
         dbQuery { NoteTable.deleteWhere { NoteTable.id.eq(id.toUUID()) } }
     }
-
 }

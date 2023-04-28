@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.libs
-
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.ktor.plugin)
@@ -61,7 +59,6 @@ ktor {
 ktlint {
     debug.set(true)
     verbose.set(true)
-    android.set(false)
     outputToConsole.set(true)
     outputColorName.set("RED")
     filter {
@@ -70,10 +67,3 @@ ktlint {
         include("**/kotlin/**")
     }
 }
-
-
-// org.jlleitschuh.gradle.ktlint.KtLintCheckTask
-
-//tasks.withType<org.ji>{
-//
-//}

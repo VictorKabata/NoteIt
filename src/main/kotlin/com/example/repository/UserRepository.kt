@@ -45,5 +45,4 @@ class UserRepository {
             UserTable.deleteWhere { UserTable.email.eq(email) }
         }
     }
-
 }

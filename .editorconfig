@@ -1,3 +1,11 @@
-[*.{kt,kts}]
-disabled_rules = import-ordering, experimental:argument-list-wrapping,indent
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
 insert_final_newline = true
+charset = utf-8
+
+[*.md]
+trim_trailing_whitespace = false

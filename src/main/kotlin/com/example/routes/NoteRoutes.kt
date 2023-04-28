@@ -6,17 +6,20 @@ import com.example.repository.NoteRepository
 import com.example.utils.Constants
 import com.example.utils.ResponseHandler.errorResponse
 import com.example.utils.ResponseHandler.successResponse
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.call
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.principal
+import io.ktor.server.request.receive
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.delete
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.put
+import io.ktor.server.routing.route
 
 fun Route.noteRoutes(noteRepository: NoteRepository = NoteRepository()) = route(Constants.NOTES) {
-
     authenticate("jwt") {
-
         post(Constants.CREATE_NOTE) {
             val noteRequest: Note? = try {
                 call.receive<Note>()
@@ -66,7 +69,6 @@ fun Route.noteRoutes(noteRepository: NoteRepository = NoteRepository()) = route(
                 )
 
                 call.successResponse(message = pagedResponse)
-
             } catch (e: Exception) {
                 call.errorResponse(statusCode = HttpStatusCode.Conflict, message = e.localizedMessage)
             }
@@ -104,9 +106,9 @@ fun Route.noteRoutes(noteRepository: NoteRepository = NoteRepository()) = route(
                 return@put
             }
 
-            val email = call.principal<User>()?.email ?: return@put call.respond(
-                HttpStatusCode.BadRequest,
-                "Invalid token"
+            val email = call.principal<User>()?.email ?: return@put call.errorResponse(
+                statusCode = HttpStatusCode.BadRequest,
+                message = "Invalid token"
             )
 
             try {
@@ -146,8 +148,5 @@ fun Route.noteRoutes(noteRepository: NoteRepository = NoteRepository()) = route(
                 call.errorResponse(statusCode = HttpStatusCode.Conflict, message = e.localizedMessage)
             }
         }
-
-
     }
-
 }

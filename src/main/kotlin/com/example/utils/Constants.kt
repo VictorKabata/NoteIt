@@ -16,5 +16,5 @@ object Constants {
     const val UPDATE_NOTE = "update"
     const val DELETE_NOTE = "delete"
 
-    const val METRICS = "${API_VERSION}/metrics"
+    const val METRICS = "$API_VERSION/metrics"
 }

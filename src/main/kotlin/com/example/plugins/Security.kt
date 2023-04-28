@@ -2,12 +2,11 @@ package com.example.plugins
 
 import com.example.authentication.JwtService
 import com.example.repository.UserRepository
-import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
+import io.ktor.server.application.Application
+import io.ktor.server.auth.authentication
+import io.ktor.server.auth.jwt.jwt
 
 fun Application.configureSecurity(userRepository: UserRepository = UserRepository()) {
-
     authentication {
         jwt("jwt") {
             verifier(JwtService.verifier)
@@ -20,5 +19,4 @@ fun Application.configureSecurity(userRepository: UserRepository = UserRepositor
             }
         }
     }
-
 }

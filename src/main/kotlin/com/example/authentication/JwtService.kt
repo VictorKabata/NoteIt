@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.example.models.User
 import com.typesafe.config.ConfigFactory
-import io.ktor.util.*
+import io.ktor.util.hex
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 

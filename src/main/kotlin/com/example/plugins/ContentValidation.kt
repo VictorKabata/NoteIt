@@ -2,11 +2,12 @@ package com.example.plugins
 
 import com.example.models.Note
 import com.example.models.User
-import io.ktor.server.application.*
-import io.ktor.server.plugins.requestvalidation.*
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
+import io.ktor.server.plugins.requestvalidation.RequestValidation
+import io.ktor.server.plugins.requestvalidation.ValidationResult
 
 fun Application.configureContentValidation() {
-
     install(RequestValidation) {
         validate<User> {
             when {
@@ -24,7 +25,6 @@ fun Application.configureContentValidation() {
             else ValidationResult.Valid
         }
     }
-
 }
 
 private fun String.isValidEmail(): Boolean {

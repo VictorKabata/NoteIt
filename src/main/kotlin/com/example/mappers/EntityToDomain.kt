@@ -11,7 +11,7 @@ fun ResultRow?.toUserDomain(): User? {
     else User(
         email = this[UserTable.email],
         userName = this[UserTable.userName],
-        hashPassword = this[UserTable.hashPassword],
+        hashPassword = this[UserTable.hashPassword]
     )
 }
 

@@ -1,10 +1,13 @@
 package com.example.plugins
 
 import com.example.utils.Constants
-import io.ktor.server.application.*
-import io.ktor.server.metrics.micrometer.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.server.application.Application
+import io.ktor.server.application.call
+import io.ktor.server.application.install
+import io.ktor.server.metrics.micrometer.MicrometerMetrics
+import io.ktor.server.response.respond
+import io.ktor.server.routing.get
+import io.ktor.server.routing.routing
 import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics
 import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics
 import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics
@@ -42,4 +45,3 @@ fun Application.configureMonitoring() {
         }
     }
 }
-

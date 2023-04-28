@@ -7,15 +7,20 @@ import com.example.repository.UserRepository
 import com.example.utils.Constants
 import com.example.utils.ResponseHandler.errorResponse
 import com.example.utils.ResponseHandler.successResponse
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.request.*
-import io.ktor.server.routing.*
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.call
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.principal
+import io.ktor.server.request.receive
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.delete
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.put
+import io.ktor.server.routing.route
 
 /**Auth routes for user registration and login*/
 fun Route.authRoutes(userRepository: UserRepository = UserRepository()) = route(Constants.USERS) {
-
     // Get User Route
     get {
         val emailQueryParam = call.request.queryParameters["email"]
@@ -78,18 +83,14 @@ fun Route.authRoutes(userRepository: UserRepository = UserRepository()) = route(
             if (user == null) {
                 call.errorResponse(statusCode = HttpStatusCode.NotFound, message = "User not found")
             } else {
-
                 if (user.hashPassword == passwordQueryParam.hash()) {
-
                     val userToken = mapOf("token" to user.generateToken())
 
                     call.successResponse(message = userToken)
                 } else {
                     call.errorResponse(statusCode = HttpStatusCode.BadRequest, message = "Invalid password")
                 }
-
             }
-
         } catch (e: Exception) {
             call.errorResponse(statusCode = HttpStatusCode.Conflict, message = e.localizedMessage)
         }
