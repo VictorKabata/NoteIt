@@ -15,6 +15,6 @@ fun Application.module() {
     configureSecurity()
     configureMonitoring()
     configureSerialization()
-    configureContentValidation()
+    // configureContentValidation()
     configureRouting()
 }
