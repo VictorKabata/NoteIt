@@ -18,6 +18,9 @@ jobs:
                     distribution: 'adopt'
                     java-version: '11'
 
+            -   name: Make gradle executable
+                run: chmod +x ./gradlew
+
             -   name: 🔨 Build with Gradle
                 run: ./gradlew build --no-daemon
 
