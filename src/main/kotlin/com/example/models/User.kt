@@ -1,17 +1,17 @@
 package com.example.models
 
-import io.ktor.server.auth.*
-import kotlinx.serialization.SerialName
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
+import io.ktor.server.auth.Principal
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class User(
-    @SerialName("email")
+    @Expose @SerializedName("email")
     var email: String,
 
-    @SerialName("user_name")
+    @Expose @SerializedName("user_name")
     var userName: String,
 
-    @SerialName("password")
-    var hashPassword: String
-):Principal
+    @Expose(serialize = false) var hashPassword: String
+) : Principal

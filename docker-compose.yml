@@ -1,0 +1,91 @@
+version: '3.9'
+
+services:
+
+  # Postres Database
+  database:
+    image: postgres:latest
+    container_name: noteit_db
+    networks:
+      - app-network
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: notes_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 10s
+      retries: 2
+
+  # NoteIt API
+  web:
+    build: .
+    container_name: noteit_service
+    networks:
+      - app-network
+    ports:
+      - "8081:8081"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8081/v1/" ]
+      interval: 10s
+      timeout: 10s
+      retries: 2
+    depends_on:
+      database:
+        condition: service_healthy
+
+  # Prometheus container to query backend metrics
+#  prometheus:
+#    image: prom/prometheus
+#    container_name: noteit_prometheus
+#    networks:
+#      - app-network
+#    ports:
+#      - "3570:9090"
+#    volumes:
+#      - ./monitoring:/etc/prometheus/
+#    links:
+#      - web
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:9090/-/ready" ]
+#      interval: 10s
+#      timeout: 10s
+#      retries: 2
+#    depends_on:
+#      web:
+#        condition: service_healthy
+
+  # Grafana container to visualize data
+#  grafana:
+#    image: grafana/grafana:5.1.0
+#    container_name: noteit_grafana
+#    networks:
+#      - app-network
+#    ports:
+#      - "3000:3000"
+#    user: "104"
+#    volumes:
+#      - ./monitoring/grafana:/var/lib/grafana
+#    links:
+#      - web
+#      - prometheus
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:3000/health" ]
+#      interval: 10s
+#      timeout: 10s
+#      retries: 2
+#    depends_on:
+#      prometheus:
+#        condition: service_started #ToDo: Check for service_healthy
+
+volumes:
+  db_data:
+
+networks:
+  app-network:
+    driver: bridge

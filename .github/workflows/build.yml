@@ -1,0 +1,38 @@
+name: Build
+
+on:
+    pull_request:
+        branches: [ develop ]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout code
+                uses: actions/checkout@v3
+
+            -   name: Setup JDK
+                uses: actions/setup-java@v3
+                with:
+                    distribution: 'adopt'
+                    java-version: '11'
+
+            -   name: Make Gradle Executable
+                run: chmod +x ./gradlew
+
+            -   name: Build with Gradle
+                run: ./gradlew build --no-daemon
+
+            -   name: Lint Check
+                run: ./gradlew ktLintCheck --no-daemon
+
+            -   name: Unit Tests
+                run: ./gradlew test --no-daemon
+
+            -   name: Docker Build
+                uses: docker/build-push-action@v2
+                with:
+                    context: .
+                    push: false
+                    tags: noteit-web:latest
