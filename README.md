@@ -11,7 +11,7 @@ the below script in your terminal:
 docker-compose up -d
 ```
 
-You can then import the [Postman collection](assets/Ktor NoteIt.postman_collection) to test out the API.
+You can then import the [Postman collection](assets/NoteIt.postman_collection) to test out the API.
 
 ## Libraries
 
