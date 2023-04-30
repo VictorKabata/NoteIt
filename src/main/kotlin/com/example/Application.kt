@@ -19,4 +19,5 @@ fun Application.module() {
     configureSerialization()
     // configureContentValidation()
     configureRouting()
+    // configureDocumentation()
 }
