@@ -25,7 +25,6 @@ dependencies {
     implementation(libs.ktor.server.auth.jwt)
     implementation(libs.ktor.server.contentNegotiation)
     implementation(libs.ktor.server.serialization.gson)
-    implementation(libs.ktor.server.sessions)
     implementation(libs.ktor.server.logging)
     implementation(libs.ktor.server.netty)
     implementation(libs.ktor.server.requestValidation)
