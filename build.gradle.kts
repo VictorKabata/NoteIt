@@ -45,6 +45,7 @@ dependencies {
     implementation(libs.config4k)
 
     implementation(libs.kotlinx.datetime)
+    implementation("io.ktor:ktor-server-cors-jvm:2.2.4")
 
     testImplementation(libs.ktor.server.test)
     testImplementation(libs.kotlin.test.junit)
