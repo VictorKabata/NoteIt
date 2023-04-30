@@ -26,6 +26,7 @@ ktor-server-logging = { module = "io.ktor:ktor-server-call-logging-jvm", version
 ktor-server-netty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktor" }
 ktor-server-requestValidation = { module = "io.ktor:ktor-server-request-validation", version.ref = "ktor" }
 ktor-server-monitoring = { module = "io.ktor:ktor-server-metrics-micrometer", version.ref = "ktor" }
+ktor-server-swagger = { module = "io.ktor:ktor-server-swagger", version.ref = "ktor" }
 
 prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "prometheus" }
 

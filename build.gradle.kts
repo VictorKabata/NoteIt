@@ -30,6 +30,8 @@ dependencies {
     implementation(libs.ktor.server.netty)
     implementation(libs.ktor.server.requestValidation)
     implementation(libs.ktor.server.monitoring)
+    implementation(libs.ktor.server.swagger)
+
     implementation(libs.prometheus)
 
     implementation(libs.exposed.core)
@@ -43,7 +45,6 @@ dependencies {
     implementation(libs.config4k)
 
     implementation(libs.kotlinx.datetime)
-    implementation("io.ktor:ktor-server-metrics-micrometer-jvm:2.2.4")
 
     testImplementation(libs.ktor.server.test)
     testImplementation(libs.kotlin.test.junit)
