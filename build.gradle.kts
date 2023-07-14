@@ -30,6 +30,7 @@ dependencies {
     implementation(libs.ktor.server.requestValidation)
     implementation(libs.ktor.server.monitoring)
     implementation(libs.ktor.server.swagger)
+    implementation(libs.ktor.server.cors)
 
     implementation(libs.prometheus)
 
@@ -44,7 +45,9 @@ dependencies {
     implementation(libs.config4k)
 
     implementation(libs.kotlinx.datetime)
-    implementation("io.ktor:ktor-server-cors-jvm:2.2.4")
+
+    implementation(libs.kGraphQL)
+    implementation(libs.kGraphQL.ktor)
 
     testImplementation(libs.ktor.server.test)
     testImplementation(libs.kotlin.test.junit)
