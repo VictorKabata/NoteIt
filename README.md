@@ -7,7 +7,7 @@ Boilerplate Kotlin server for a simple note app backend
 You can quickly set up the server by using [Docker](https://www.docker.com/). Once you have docker installed you can run
 the below script in your terminal:
 
-```text
+```shell
 docker-compose up -d
 ```
 
