@@ -36,5 +36,5 @@ out/
 .vscode/
 
 ### Configuration Files
-# *.conf
+*.conf
 monitoring/grafana/*
