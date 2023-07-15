@@ -1,11 +1,10 @@
 package com.example.routes
 
+import com.apurebase.kgraphql.schema.dsl.SchemaBuilder
 import com.example.utils.Constants
 import com.example.utils.ResponseHandler.successResponse
-import io.ktor.server.application.call
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.get
-import io.ktor.server.routing.route
+import io.ktor.server.application.*
+import io.ktor.server.routing.*
 
 fun Route.homeRoutes() = route(Constants.HOME) {
     get {
