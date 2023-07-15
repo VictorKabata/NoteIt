@@ -7,7 +7,7 @@ import com.example.routes_graphql.homeGraphQLRoutes
 import com.example.routes_graphql.notesGraphQLRoutes
 import com.example.routes_graphql.userGraphQLRoutes
 
-fun SchemaBuilder.configureGraphQLSchema(){
+fun SchemaBuilder.configureGraphQLSchema() {
 
     type<User> {
         description = "User object"
@@ -15,6 +15,14 @@ fun SchemaBuilder.configureGraphQLSchema(){
 
     type<Note> {
         description = "Note object"
+    }
+
+    inputType<User> {
+        description = "User object input"
+    }
+
+    inputType<Note> {
+        description = "Note object input"
     }
 
     homeGraphQLRoutes()
