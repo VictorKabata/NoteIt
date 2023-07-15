@@ -1,5 +1,6 @@
 package com.example.routes_graphql
 
+import com.apurebase.kgraphql.schema.dsl.SchemaBuilder
 import com.example.authentication.JwtService.generateToken
 import com.example.authentication.JwtService.hash
 import com.example.models.User
@@ -18,3 +19,7 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.route
+
+fun SchemaBuilder.userGraphQLRoutes(){
+
+}

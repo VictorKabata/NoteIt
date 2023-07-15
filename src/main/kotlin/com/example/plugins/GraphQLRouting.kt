@@ -4,6 +4,8 @@ import com.apurebase.kgraphql.schema.dsl.SchemaBuilder
 import com.example.models.Note
 import com.example.models.User
 import com.example.routes_graphql.homeGraphQLRoutes
+import com.example.routes_graphql.notesGraphQLRoutes
+import com.example.routes_graphql.userGraphQLRoutes
 
 fun SchemaBuilder.configureGraphQLSchema(){
 
@@ -17,5 +19,8 @@ fun SchemaBuilder.configureGraphQLSchema(){
 
     homeGraphQLRoutes()
 
+    userGraphQLRoutes()
+
+    notesGraphQLRoutes()
 
 }
