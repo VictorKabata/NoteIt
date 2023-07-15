@@ -7,7 +7,7 @@ import io.ktor.server.application.*
 
 fun Application.configureGraphQL() {
     install(GraphQL) {
-        playground = true
+        // playground = true
         endpoint="/graphql"
         schema {
             configureGraphQLSchema()
