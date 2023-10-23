@@ -62,10 +62,12 @@ ktor {
     }
 }
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
-    }
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+}
+
+tasks.compileKotlin{
+    kotlinOptions.jvmTarget=JavaVersion.VERSION_11.toString()
 }
 
 ktlint {
